@@ -72,12 +72,6 @@ public class ParserTicker {
                 list.add(newTicker);
             }
         }
-
-
-
-
-
-
         return list;
     }
 }
