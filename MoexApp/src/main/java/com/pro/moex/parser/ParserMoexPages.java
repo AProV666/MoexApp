@@ -4,14 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pro.moex.model.ticker.Root;
 import com.pro.moex.utils.HttpClientUtils;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Getter
-@NoArgsConstructor
-public class ParserPageSizeAndTotal {
+@Component
+public class ParserMoexPages {
     private int total;
     private int pageSize;
+
+    public int getTotal() {
+        return total;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
 
     public void parse(String tickerURL) {
         try {

@@ -3,55 +3,56 @@ package com.pro.moex.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pro.moex.entity.Ticker;
+import com.pro.moex.entity.TickerStorage;
+import com.pro.moex.mapper.Mapper;
 import com.pro.moex.model.ticker.Root;
+import com.pro.moex.storage.Storage;
 import com.pro.moex.utils.HttpClientUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class ParserTicker {
-    private final String boardId;
+@Component
+public class ParserMoexTickerStorage {
 
-    public ParserTicker(String boardId) {
-        this.boardId = boardId;
+    private final Storage storage;
+
+    @Autowired
+    public ParserMoexTickerStorage(Storage storage) {
+        this.storage = storage;
     }
 
-    public ArrayList<Ticker> parse(String tickerURL) {
+    public void parse(String ticker, String tickerURL, String boardId) {
 
-        ArrayList<Ticker> tickerList;
-
+        Root root;
         try {
             String jsonTicker = new HttpClientUtils().httpGet(tickerURL);
             ObjectMapper om = new ObjectMapper();
-            Root root = om.readValue(jsonTicker, Root.class);
-            tickerList = getInfoFromTicker(root);
+            root = om.readValue(jsonTicker, Root.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return tickerList;
-    }
-
-    public ArrayList<Ticker> getInfoFromTicker(Root root) {
 
         ArrayList<String> columnsList = root.getHistory().getColumns();
-
         int numTradeDate = ParserNumberFromColumnList.getNumber(columnsList, "TRADEDATE");
         int numLow = ParserNumberFromColumnList.getNumber(columnsList, "LOW");
         int numHigh = ParserNumberFromColumnList.getNumber(columnsList, "HIGH");
         int numClose = ParserNumberFromColumnList.getNumber(columnsList, "CLOSE");
         int numVolume = ParserNumberFromColumnList.getNumber(columnsList, "VOLUME");
 
-        ArrayList<Ticker> list = new ArrayList<>();
-
         for (int i = 0; i < root.getHistory().getData().size(); i++) {
             String boardEq = String.valueOf(root.getHistory().getData().get(i).get(0));
             if (boardEq.equals(boardId)) {
                 if (root.getHistory().getData().get(i).get(numLow) == null ||
                         root.getHistory().getData().get(i).get(numHigh) == null ||
-                        root.getHistory().getData().get(i).get(numClose) == null) {
+                        root.getHistory().getData().get(i).get(numClose) == null ||
+                        root.getHistory().getData().get(i).get(numVolume) == null) {
                     continue;
                 }
 
@@ -71,10 +72,15 @@ public class ParserTicker {
                 Double close = Double.valueOf(String.valueOf(root.getHistory().getData().get(i).get(numClose)));
                 Integer volume = Integer.valueOf(String.valueOf(root.getHistory().getData().get(i).get(numVolume)));
 
-                Ticker newTicker = new Ticker(date, low, high, close, volume);
-                list.add(newTicker);
+                TickerStorage newTicker = new TickerStorage(ticker, date, low, high, close, volume);
+                storage.addTicker(newTicker);
             }
         }
-        return list;
+    }
+
+    public List<Ticker> getTickerList(String ticker) {
+        List<TickerStorage> tickerStorageList = storage.getTickerList(ticker);
+        Mapper mapper = new Mapper(tickerStorageList);
+        return mapper.getMapper();
     }
 }

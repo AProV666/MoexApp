@@ -1,21 +1,28 @@
 package com.pro.moex.entity;
 
-import org.springframework.stereotype.Component;
-
-
-public class Ticker {
+public class TickerStorage {
+    private String ticker;
     private String date;
     private Double low;
     private Double high;
     private Double close;
     private Integer volume;
 
-    public Ticker(String date, Double low, Double high, Double close, Integer volume) {
+    public TickerStorage(String ticker, String date, Double low, Double high, Double close, Integer volume) {
+        this.ticker = ticker;
         this.date = date;
         this.low = low;
         this.high = high;
         this.close = close;
         this.volume = volume;
+    }
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
     }
 
     public String getDate() {
@@ -56,16 +63,5 @@ public class Ticker {
 
     public void setVolume(Integer volume) {
         this.volume = volume;
-    }
-
-    @Override
-    public String toString() {
-        return "Ticker{" +
-                "date='" + date + '\'' +
-                ", low=" + low +
-                ", high=" + high +
-                ", close=" + close +
-                ", volume=" + volume +
-                '}';
     }
 }

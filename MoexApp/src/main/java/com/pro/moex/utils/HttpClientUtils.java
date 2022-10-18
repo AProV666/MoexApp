@@ -1,7 +1,5 @@
 package com.pro.moex.utils;
 
-import lombok.NonNull;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,7 +7,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 public class HttpClientUtils {
-    public String httpGet(@NonNull String url) {
+    public String httpGet(String url) {
         String json = null;
         try {
             HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(30)).build();

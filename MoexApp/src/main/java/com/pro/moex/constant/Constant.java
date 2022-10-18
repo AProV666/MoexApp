@@ -5,4 +5,6 @@ public class Constant {
 
     public static final String BASE_URL_TICKER =
             "https://iss.moex.com/iss/history/engines/%s/markets/%s/securities/%s.json?start=%d";
+
+//    https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/sberp.json?start=0;
 }

@@ -1,61 +1,37 @@
 package com.pro.moex;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pro.moex.exception.NotFoundException;
-import com.pro.moex.model.moex.Root;
-import com.pro.moex.utils.HttpClientUtils;
+import com.pro.moex.entity.Ticker;
+import com.pro.moex.entity.TickerStorage;
+import com.pro.moex.mapper.Mapper;
+import com.pro.moex.storage.Storage;
+import com.pro.moex.storage.impl.StorageImpl;
 
-import java.util.*;
+import java.util.List;
 
 public class Test {
+    static Storage storage = new StorageImpl();
     public static void main(String[] args) throws JsonProcessingException {
-        String BASE_URL = "https://iss.moex.com/iss/securities/sber.json";
 
-        HttpClientUtils httpClientUtils = new HttpClientUtils();
-        String jsonMoex = httpClientUtils.httpGet(BASE_URL);
-
-        ObjectMapper om = new ObjectMapper();
-
-        Root root = om.readValue(jsonMoex, Root.class);
-
-        List<String> columnsList = root.getBoards().getColumns();
-        List<ArrayList<Object>> dataList = root.getBoards().getData();
-
-        int numBoard = getNumber(columnsList, "boardid");
-        int numMarket = getNumber(columnsList, "market");
-        int numEngine = getNumber(columnsList, "engine");
-        int numPrimary = getNumber(columnsList, "is_primary");
-        System.out.println(numBoard + " " + numMarket + " " + numEngine + " " + numPrimary);
-
-        String boardId = getText(dataList, numPrimary, numBoard);
-        String market = getText(dataList, numPrimary, numMarket);
-        String engine = getText(dataList, numPrimary, numEngine);
-
-        System.out.println(boardId + " " + market + " " + engine);
-    }
-
-    private static Integer getNumber(List<String> list, String str) {
-        Map<Integer, String> mapMap = new HashMap<>();
-        int num = 0;
-        for (String s : list) {
-            mapMap.put(num++, s);
+        for(int i = 1; i <= 12; i++) {
+//            TickerStorage newTicker = new TickerStorage("sber", "12." + i + ".2022", 10.0 * i, 100.0 * i, 50.0 * i, 1000 * i);
+            TickerStorage newTicker = new TickerStorage("sber", "12.10.2022", 10.0, 100.0, 50.0, 1000);
+            TickerStorage newTicker1 = new TickerStorage("sber", "12.10.2023", 10.0, 100.0, 50.0, 1000);
+            TickerStorage newTicker2 = new TickerStorage("sber", "12.10.2022", 10.0, 100.0, 50.0, 1000);
+            storage.addTicker(newTicker);
+            storage.addTicker(newTicker1);
+            storage.addTicker(newTicker2);
         }
-        return mapMap.keySet()
-                .stream()
-                .filter(key -> str.equals(mapMap.get(key)))
-                .findFirst().orElseThrow(() -> new NotFoundException(String.format("%s not found!", str)));
-    }
+        List<Ticker> tickers = getTickerList("sber");
 
-    private static String getText(List<ArrayList<Object>> list, int primary, int num) {
-        String str = "";
-        for (ArrayList<Object> dataList : list) {
-            if ((int) dataList.get(primary) == 1) {
-                str = dataList.get(num).toString();
-            }
-        }
-        return str;
+        tickers.forEach(System.out::println);
+
     }
 
 
+        public static List<Ticker> getTickerList(String ticker) {
+        List<TickerStorage> tickerStorageList = storage.getTickerList(ticker);
+        Mapper mapper = new Mapper(tickerStorageList);
+        return mapper.getMapper();
+    }
 }
