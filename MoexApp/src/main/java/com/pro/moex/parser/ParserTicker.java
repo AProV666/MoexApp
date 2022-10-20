@@ -19,12 +19,12 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class ParserMoexTickerStorage {
+public class ParserTicker {
 
     private final Storage storage;
 
     @Autowired
-    public ParserMoexTickerStorage(Storage storage) {
+    public ParserTicker(Storage storage) {
         this.storage = storage;
     }
 
@@ -40,11 +40,11 @@ public class ParserMoexTickerStorage {
         }
 
         ArrayList<String> columnsList = root.getHistory().getColumns();
-        int numTradeDate = ParserNumberFromColumnList.getNumber(columnsList, "TRADEDATE");
-        int numLow = ParserNumberFromColumnList.getNumber(columnsList, "LOW");
-        int numHigh = ParserNumberFromColumnList.getNumber(columnsList, "HIGH");
-        int numClose = ParserNumberFromColumnList.getNumber(columnsList, "CLOSE");
-        int numVolume = ParserNumberFromColumnList.getNumber(columnsList, "VOLUME");
+        int numTradeDate = ParserNumbers.getNumber(columnsList, "TRADEDATE");
+        int numLow = ParserNumbers.getNumber(columnsList, "LOW");
+        int numHigh = ParserNumbers.getNumber(columnsList, "HIGH");
+        int numClose = ParserNumbers.getNumber(columnsList, "CLOSE");
+        int numVolume = ParserNumbers.getNumber(columnsList, "VOLUME");
 
         for (int i = 0; i < root.getHistory().getData().size(); i++) {
             String boardEq = String.valueOf(root.getHistory().getData().get(i).get(0));

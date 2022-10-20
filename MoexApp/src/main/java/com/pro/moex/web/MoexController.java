@@ -25,7 +25,6 @@ public class MoexController {
     @RequestMapping(value = "/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Ticker> index(@PathVariable("ticker") String ticker) {
         ticker = ticker.toLowerCase();
-        //словать ексепшин нот фаунд
         return moexService.getHistory(ticker);
     }
 }

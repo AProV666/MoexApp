@@ -4,7 +4,7 @@ import com.pro.moex.constant.Constant;
 import com.pro.moex.entity.Moex;
 import com.pro.moex.entity.Ticker;
 import com.pro.moex.exception.NotFoundException;
-import com.pro.moex.parser.ParserMoexTicker;
+import com.pro.moex.parser.LogicParserTicker;
 import com.pro.moex.parser.ParserMoex;
 import com.pro.moex.service.MoexHistoryService;
 import com.pro.moex.utils.HttpClientUtils;
@@ -16,11 +16,11 @@ import java.util.List;
 @Component
 public class ServiceImpl implements MoexHistoryService {
 
-    private final ParserMoexTicker parserMoexTicker;
+    private final LogicParserTicker logicParserTicker;
 
     @Autowired
-    public ServiceImpl(ParserMoexTicker parserMoexTicker) {
-        this.parserMoexTicker = parserMoexTicker;
+    public ServiceImpl(LogicParserTicker logicParserTicker) {
+        this.logicParserTicker = logicParserTicker;
     }
 
     @Override
@@ -33,7 +33,6 @@ public class ServiceImpl implements MoexHistoryService {
         }
         Moex moex = new ParserMoex().getMoexEntity(jsonMoex);
 
-
-        return parserMoexTicker.getTickerList(moex, ticker);
+        return logicParserTicker.getTickerList(moex, ticker);
     }
 }

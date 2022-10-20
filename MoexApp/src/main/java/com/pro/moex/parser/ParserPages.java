@@ -7,7 +7,7 @@ import com.pro.moex.utils.HttpClientUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParserMoexPages {
+public class ParserPages {
     private int total;
     private int pageSize;
 

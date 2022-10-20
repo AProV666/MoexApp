@@ -4,7 +4,7 @@ import com.pro.moex.exception.NotFoundException;
 
 import java.util.List;
 
-public class ParserNumberFromColumnList {
+public class ParserNumbers {
     public static int getNumber(List<String> list, String str) {
         int num = -1;
         for (int i = 0; i < list.size(); i++) {

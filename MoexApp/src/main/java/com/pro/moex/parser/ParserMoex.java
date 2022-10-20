@@ -24,10 +24,10 @@ public class ParserMoex {
             throw new RuntimeException(e);
         }
 
-        int numBoard = ParserNumberFromColumnList.getNumber(columnsList, "boardid");
-        int numMarket = ParserNumberFromColumnList.getNumber(columnsList, "market");
-        int numEngine = ParserNumberFromColumnList.getNumber(columnsList, "engine");
-        int numPrimary = ParserNumberFromColumnList.getNumber(columnsList, "is_primary");
+        int numBoard = ParserNumbers.getNumber(columnsList, "boardid");
+        int numMarket = ParserNumbers.getNumber(columnsList, "market");
+        int numEngine = ParserNumbers.getNumber(columnsList, "engine");
+        int numPrimary = ParserNumbers.getNumber(columnsList, "is_primary");
 
         String boardId = ParserInfoFromDataList.getInfo(dataList, numPrimary, numBoard);
         String market = ParserInfoFromDataList.getInfo(dataList, numPrimary, numMarket);
