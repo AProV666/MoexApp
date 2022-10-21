@@ -1,8 +1,5 @@
 package com.pro.moex.entity;
 
-import org.springframework.stereotype.Component;
-
-
 public class Ticker {
     private String date;
     private Double low;

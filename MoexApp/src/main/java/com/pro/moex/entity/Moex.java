@@ -1,7 +1,5 @@
 package com.pro.moex.entity;
 
-import org.springframework.stereotype.Component;
-
 public class Moex {
     private String boardId;
     private String market;
